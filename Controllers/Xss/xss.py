@@ -17,5 +17,4 @@ class LinkCrawler():
         else:
             print ("[+] Oops response is bad")
             sys.exit(0)
-
-
+    
