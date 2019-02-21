@@ -1,10 +1,15 @@
 from Controllers.Xss.xss import *
 import  argparse
+import datetime
 
 
 def isXssHandler(isUrl):
-    tes = LinkCrawler(isUrl)
-    tes.RequestHtml()
+    # Folder in Controllers -> Xss in xss.py
+    isTimeNow = datetime.datetime.now()
+    xssAnalisys = LinkCrawler(isUrl)
+    xssAnalisys.RequestHtml()
+    isEnd = datetime.datetime.now() - isTimeNow
+    print ("[!] Process end with time", str(isEnd))
 
 def main():
     parser = argparse.ArgumentParser()
