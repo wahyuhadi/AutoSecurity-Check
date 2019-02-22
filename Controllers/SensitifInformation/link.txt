@@ -1,0 +1,7 @@
+/.env
+/.git/config
+/phpmyadmin
+/artisan
+/.htaccess
+/robot.txt
+/db.sql

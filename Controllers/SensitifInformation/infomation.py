@@ -43,7 +43,7 @@ class InformationDisclorse ():
                     print (CGRE,"[+] Backend Technology Found ", XPowerBy, CENDYELL)
                     print (CYELL,"[Advice] Hardening your servers ",CENDYELL)
                 if (WebServer == 'null' and XPowerBy == 'null'):
-                    print ("[+] Server status is Ok")
+                    print ("[+] Server status is Ok\n")
 
             else : 
                 print (CYELL, "[!] Oops response is bad in url ", str(isUrl), "\n",CENDYELL)
@@ -60,8 +60,21 @@ class InformationDisclorse ():
         isResultScan = isScaning.scan(host)
         pprint.pprint(isResultScan['scan'][host]['tcp'])
 
+    def FindCritcalLink(self, isUrl):
+        isCritical = []
+        with open('Controllers/SensitifInformation/link.txt') as filehandle:  
+            for line in filehandle:
+                uri = line[:-1]
+                isCritical.append(uri)
+
+        print ("\n[INFO] Checking Critical URL .. \n")
+
+        for critical in isCritical:
+            url = isUrl+critical
+            isStatus = (requests.get(url).status_code)
+            if (isStatus == 200):
+                print (CGRE,"[WARNING] Critical link found ",url,CENDYELL)
+
     def GetInformation(self):
         self.GetWebServer(self.isUrl)
-        self.ScanningServer(self.isUrl)
-
-
+        self.FindCritcalLink(self.isUrl)
