@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 isCheck= ['"', '>', '<', '(',')','!',';','%','@',"'"]
 
-class LinkCrawler():
+class HtmlCheck():
 
     def __init__(self, url, tags):
         self.url = url
@@ -45,16 +45,18 @@ class LinkCrawler():
 
         return paramsName, paramsValues
 
-
-
     def RequestHtml(self):
         url = self.url
         tags = self.tags
         isUrl = self.ChangeQueryParamsValues(url, isCheck)
+        totalRequest = 0
+        requestError = 0
+
         print ("[+] Get HTML data from URL .. ")
         print ("[+] Checking from "+tags+" tags html")
         print ("[+] Indentification html Response .. ")
         for i in range(0, len(isUrl)):
+            totalRequest = totalRequest + 1
             try: 
                 isQueryParams = self.getQueryParamsUrls(isUrl[i])
                 isParamsAndValues = self.getParamsNameAndValues(isQueryParams)
@@ -63,13 +65,19 @@ class LinkCrawler():
                     isParsedHtml = self.Parser(isHtml.text, tags)
                     isAnalised = self.preCheckPayload(isParsedHtml, isParamsAndValues[1])
                     isQueryName = self.queryNameParsing(isQueryParams, isAnalised)
-                    print ("[+] Posible Parameter in URL ", isQueryName , "\n")
+                    if (isQueryName != 'Not Found'):
+                        print ("[+] Posible Parameter in URL ", isQueryName , "\n")
                 else:
                     print ("[!] Oops response is bad in url", str(isUrl[i]) , "\n")
+                    requestError = requestError + 1
 
             except (TimeoutError) as e:
                 print ("[+] Oops Request timeout")
                 sys.exit(0)
+
+        print ("[+] Total request ", totalRequest)
+        print ("[-] Request Success ", totalRequest - requestError)
+        print ("[-] Error Request ", requestError)
             
 
     def Parser(self, isHtmlResponse, isTagsHtml):
@@ -85,13 +93,16 @@ class LinkCrawler():
 
         return isHtml
 
-
     def queryNameParsing(self, isDict, isValue):
         nameParams = ""
         for value in isValue:
             for name, key in isDict.items() :
                 if key == value:
-                    nameParams += name+" "
+                    split = nameParams.split(" ")
+                    if name in split   :
+                        var = ''
+                    else :
+                        nameParams += name+" "
         return nameParams or "Not Found"
 
     def preCheckPayload(self, isParsedHtml, isCheck):
@@ -99,6 +110,5 @@ class LinkCrawler():
         for isValue in isCheck:
             if isValue in isParsedHtml:
                 isResult.append(isValue)
-                print ("[+] Xss indentified !! ", isValue)
+                print ("[+] Unescape html indentified  ", isValue, "true")
         return isResult
-        
