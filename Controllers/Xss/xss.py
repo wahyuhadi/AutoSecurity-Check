@@ -1,3 +1,8 @@
+'''
+author : rahmat wahyu hadi 
+date : 2019-02-22
+'''
+
 import requests
 import sys
 from urllib import parse
