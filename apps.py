@@ -4,7 +4,7 @@ date : 2019-02-22
 '''
 
 from Controllers.Xss.xss import HtmlCheck
-from Controllers.SensitifData.infomation import InformationDisclorse
+from Controllers.SensitifInformation.infomation import InformationDisclorse
 import  argparse
 import datetime
 import json

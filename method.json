@@ -3,5 +3,10 @@
         "method" : "xss",
         "version" : "1.0.0",
         "status" : "valid"
+    },
+    {
+        "method" : "info",
+        "version" : "1.0.0",
+        "status" : "valid"
     }
 ]
