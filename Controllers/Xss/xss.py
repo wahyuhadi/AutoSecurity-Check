@@ -7,6 +7,10 @@ from bs4 import BeautifulSoup
 isCheck= ['"', '>', '<', '(',')','!',';','%','@',"'"]
 isXssPayload = ['<script>alert("xss found");</script>',    '"><script>alert("xss found");</script>', "<script>alert('xss found');</script>", "'><script>alert('xss found');</script>"]
 
+CYELL = '\033[93m'
+CENDYELL = '\033[0m'
+CGRE = '\033[92m'
+CYAN = '\033[36m'
 
 class HtmlCheck():
 
@@ -69,9 +73,9 @@ class HtmlCheck():
                     isAnalised = self.preCheckPayload(isParsedHtml, isParamsAndValues[1])
                     isQueryName = self.queryNameParsing(isQueryParams, isAnalised)
                     if (isQueryName != 'Not Found'):
-                        print ("[+] Posible Parameter in URL ", isQueryName , "\n")
+                        print (CYAN,"[-->] Posible Parameter in URL ", isQueryName , "\n",CENDYELL)
                 else:
-                    print ("[!] Oops response is bad in url", str(isUrl[i]) , "\n")
+                    print (CYELL, "[!] Oops response is bad in url ", str(isXssUrl[i]), "\n",CENDYELL)
                     requestError = requestError + 1
 
             except (TimeoutError) as e:
@@ -91,9 +95,9 @@ class HtmlCheck():
                     isAnalised = self.preCheckPayload(isParsedHtml, isParamsAndValues[1])
                     isQueryName = self.queryNameParsing(isQueryParams, isAnalised)
                     if (isQueryName != 'Not Found'):
-                        print ("[+] Posible Xss Parameter in URL Found ", isXssUrl[xss] , "\n")
+                        print (CGRE,"[-->] Posible Xss Parameter in URL Found ", isXssUrl[xss] , "\n",CENDYELL)
                 else:
-                    print ("[!] Oops response is bad in url", str(isXssUrl[xss]) , "\n")
+                    print (CYELL, "[!] Oops response is bad in url", str(isXssUrl[xss]) , "\n",CENDYELL)
                     requestError = requestError + 1
 
             except (TimeoutError) as e:
