@@ -1,4 +1,4 @@
-from Controllers.Xss.xss import *
+from Controllers.Xss.xss import HtmlCheck
 import  argparse
 import datetime
 
