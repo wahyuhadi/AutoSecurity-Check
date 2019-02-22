@@ -6,7 +6,7 @@ import datetime
 def isXssHandler(isUrl, isTags):
     # Folder in Controllers -> Xss in xss.py
     isTimeNow = datetime.datetime.now()
-    xssAnalisys = LinkCrawler(isUrl, isTags)
+    xssAnalisys = HtmlCheck(isUrl, isTags)
     xssAnalisys.RequestHtml()
     isEnd = datetime.datetime.now() - isTimeNow
     print ("[!] Process end with time", str(isEnd))
