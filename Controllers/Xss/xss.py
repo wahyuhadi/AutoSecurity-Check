@@ -5,6 +5,8 @@ import urllib.parse as urlparse
 from bs4 import BeautifulSoup
 
 isCheck= ['"', '>', '<', '(',')','!',';','%','@',"'"]
+isXssPayload = ['<script>alert("xss found");</script>',    '"><script>alert("xss found");</script>', "<script>alert('xss found');</script>", "'><script>alert('xss found');</script>"]
+
 
 class HtmlCheck():
 
@@ -49,6 +51,7 @@ class HtmlCheck():
         url = self.url
         tags = self.tags
         isUrl = self.ChangeQueryParamsValues(url, isCheck)
+        isXssUrl = self.ChangeQueryParamsValues(url, isXssPayload)
         totalRequest = 0
         requestError = 0
 
@@ -74,6 +77,29 @@ class HtmlCheck():
             except (TimeoutError) as e:
                 print ("[+] Oops Request timeout")
                 sys.exit(0)
+
+
+        print ("[+] Checking Xss Payload ... ")
+        for xss in range (0, len(isXssUrl)):
+            totalRequest = totalRequest + 1
+            try: 
+                isQueryParams = self.getQueryParamsUrls(isXssUrl[xss])
+                isParamsAndValues = self.getParamsNameAndValues(isQueryParams)
+                isHtml = requests.get(isXssUrl[xss], timeout=10)
+                if (isHtml.status_code == 200):
+                    isParsedHtml = self.Parser(isHtml.text, tags)
+                    isAnalised = self.preCheckPayload(isParsedHtml, isParamsAndValues[1])
+                    isQueryName = self.queryNameParsing(isQueryParams, isAnalised)
+                    if (isQueryName != 'Not Found'):
+                        print ("[+] Posible Xss Parameter in URL Found ", isXssUrl[xss] , "\n")
+                else:
+                    print ("[!] Oops response is bad in url", str(isXssUrl[xss]) , "\n")
+                    requestError = requestError + 1
+
+            except (TimeoutError) as e:
+                print ("[+] Oops Request timeout")
+                sys.exit(0)
+
 
         print ("[+] Total request ", totalRequest)
         print ("[-] Request Success ", totalRequest - requestError)
