@@ -31,20 +31,42 @@ class LinkCrawler():
             return result
 
 
+    def getQueryParamsUrls(self, isUrl):
+        isQuery= dict(urlparse.parse_qsl(urlparse.urlsplit(isUrl).query))
+        return isQuery
+
+
+    def getParamsNameAndValues(self, isDict):
+        paramsName = []
+        paramsValues = []
+        for name,dict_ in isDict.items():
+            paramsName.append(name)
+            paramsValues.append(dict_)
+
+        return paramsName, paramsValues
+
+
+
     def RequestHtml(self):
         url = self.url
         tags = self.tags
         isUrl = self.ChangeQueryParamsValues(url, isCheck)
+        print ("[+] Get HTML data from URL .. ")
         print ("[+] Checking from "+tags+" tags html")
-        for i in isUrl:
+        print ("[+] Indentification html Response .. ")
+        for i in range(0, len(isUrl)):
             try: 
-                isHtml = requests.get(i, timeout=10)
+                isQueryParams = self.getQueryParamsUrls(isUrl[i])
+                isParamsAndValues = self.getParamsNameAndValues(isQueryParams)
+                isHtml = requests.get(isUrl[i], timeout=10)
                 if (isHtml.status_code == 200):
-                    print ("[+] Get HTML data from URL ..")
-                    self.Parser(isHtml.text, tags)
+                    isParsedHtml = self.Parser(isHtml.text, tags)
+                    isAnalised = self.preCheckPayload(isParsedHtml, isParamsAndValues[1])
+                    isQueryName = self.queryNameParsing(isQueryParams, isAnalised)
+                    print ("[+] Posible Parameter in URL ", isQueryName , "\n")
                 else:
-                    print ("[!] Oops response is bad in url", str(i))
-                    sys.exit(0)
+                    print ("[!] Oops response is bad in url", str(isUrl[i]) , "\n")
+
             except (TimeoutError) as e:
                 print ("[+] Oops Request timeout")
                 sys.exit(0)
@@ -62,3 +84,21 @@ class LinkCrawler():
                 isHtml += tags
 
         return isHtml
+
+
+    def queryNameParsing(self, isDict, isValue):
+        nameParams = ""
+        for value in isValue:
+            for name, key in isDict.items() :
+                if key == value:
+                    nameParams += name+" "
+        return nameParams or "Not Found"
+
+    def preCheckPayload(self, isParsedHtml, isCheck):
+        isResult = []
+        for isValue in isCheck:
+            if isValue in isParsedHtml:
+                isResult.append(isValue)
+                print ("[+] Xss indentified !! ", isValue)
+        return isResult
+        
