@@ -12,10 +12,10 @@ from bs4 import BeautifulSoup
 isCheck= ['"', '>', '<', '(',')','!',';','%','@',"'"]
 isXssPayload = ['<script>alert("xss found");</script>',    '"><script>alert("xss found");</script>', "<script>alert('xss found');</script>", "'><script>alert('xss found');</script>"]
 
-CYELL = '\033[93m'
+CYELL = '\033[1;93m'
 CENDYELL = '\033[0m'
-CGRE = '\033[92m'
-CYAN = '\033[36m'
+CGRE = '\033[1;92m'
+CYAN = '\033[1;36m'
 
 class HtmlCheck():
 
@@ -80,7 +80,7 @@ class HtmlCheck():
                     if (isQueryName != 'Not Found'):
                         print (CYAN,"[-->] Posible Parameter in URL ", isQueryName , "\n",CENDYELL)
                 else:
-                    print (CYELL, "[!] Oops response is bad in url ", str(isXssUrl[i]), "\n",CENDYELL)
+                    print (CYELL, "[!] Oops response is bad in url ", str(isUrl[i]), "\n",CENDYELL)
                     requestError = requestError + 1
 
             except (TimeoutError) as e:
