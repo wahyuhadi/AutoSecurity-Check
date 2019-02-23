@@ -35,7 +35,6 @@ class InformationDisclorse ():
                 except (ValueError, KeyError, TypeError) : 
                     XPowerBy = 'null'
 
-
                 if (WebServer != 'null' ):
                     print (CGRE,"[+] Web Server Found ", WebServer, CENDYELL)
                     print (CYELL,"[Advice] Hardening your servers ",CENDYELL)
@@ -49,16 +48,40 @@ class InformationDisclorse ():
                 print (CYELL, "[!] Oops response is bad in url ", str(isUrl), "\n",CENDYELL)
         
         except (TimeoutError) as e:
-            print ("[+] Oops Request timeout")
+            print ("[+] Oops Request timeout ",e)
             sys.exit(0)
 
     def ScanningServer(self, isUrl):
         print ("\n[INFO] Scanning Port Server ",isUrl," ..")
         isScaning = nmap.PortScanner() 
-        host = socket.gethostbyname(isUrl)
+        host = socket.gethostbyname('unram.ac.id')
         print ("[-->] Scanning IP : ", host)
         isResultScan = isScaning.scan(host)
-        pprint.pprint(isResultScan['scan'][host]['tcp'])
+        try:
+                isScan = isResultScan['scan'][host]['tcp'] 
+        except (ValueError, KeyError, TypeError) : 
+                isScan = 'null'
+
+        if (isScan == 'null') :
+            print ("[+] Good Hardening ")
+        else : 
+            try:
+                ftp = isScan[21]
+            except (ValueError, KeyError, TypeError) : 
+                ftp = 'null'
+
+            try:
+                ssh = isScan[22]
+            except (ValueError, KeyError, TypeError) : 
+                ssh = 'null'
+
+            if (ftp['state'] == 'open'):
+                print ("[WARNING] FTP connection is open, Posible to brute force")
+            if (ssh['state'] == 'open'):
+                print ("[WARNING] SSH connection is open, Posible to brute force")
+
+            if (ssh == 'null' and ftp == 'null') : 
+                print ("[INFO] No critical port ")
 
     def FindCritcalLink(self, isUrl):
         isCritical = []
@@ -76,5 +99,6 @@ class InformationDisclorse ():
                 print (CGRE,"[WARNING] Critical link found ",url,CENDYELL)
 
     def GetInformation(self):
-        self.GetWebServer(self.isUrl)
-        self.FindCritcalLink(self.isUrl)
+        # self.GetWebServer(self.isUrl)
+        # self.FindCritcalLink(self.isUrl)
+        self.ScanningServer(self.isUrl)
