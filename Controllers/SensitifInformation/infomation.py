@@ -9,6 +9,7 @@ import nmap
 import socket
 import json 
 import pprint
+from ftplib import FTP
 
 CYELL = '\033[93m'
 CENDYELL = '\033[0m'
@@ -55,7 +56,6 @@ class InformationDisclorse ():
         print ("\n[INFO] Scanning Port Server ",isUrl," ..\n")
         isScaning = nmap.PortScanner()
         url = isUrl.replace("https://","")
-        print (url)
         host = socket.gethostbyname(url)
         print ("[-->] Scanning IP : ", host)
         isResultScan = isScaning.scan(host)
@@ -78,9 +78,18 @@ class InformationDisclorse ():
                 ssh = 'null'
 
             if (ftp['state'] == 'open'):
-                print (CGRE,"[WARNING] FTP connection is open, Posible to brute force", CENDYELL)
+                if (ftp['name'] == 'ftp'):
+                    print (CGRE,"[WARNING] FTP connection is open, Posible to brute force, Version ", ftp['product'], CENDYELL)
+                    ftp = FTP(url)
+                    loginFtp = ftp.login()
+                    if (loginFtp == '230 Anonymous user logged in'):
+                        print (CGRE,"[WARNING] ", loginFtp , CENDYELL)
+                        print ("ls command execute ", ftp.retrlines('LIST'))
+                        ftp.quit()
+
             if (ssh['state'] == 'open'):
-                print (CGRE,"[WARNING] SSH connection is open, Posible to brute force",CENDYELL)
+                if (ssh['name'] == 'ssh'):
+                    print (CGRE,"[WARNING] SSH connection is open, Posible to brute force ",ssh['product'],CENDYELL)
 
             if (ssh == 'null' and ftp == 'null') : 
                 print ("[INFO] No critical port ")
