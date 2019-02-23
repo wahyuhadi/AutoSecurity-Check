@@ -52,9 +52,11 @@ class InformationDisclorse ():
             sys.exit(0)
 
     def ScanningServer(self, isUrl):
-        print ("\n[INFO] Scanning Port Server ",isUrl," ..")
-        isScaning = nmap.PortScanner() 
-        host = socket.gethostbyname('unram.ac.id')
+        print ("\n[INFO] Scanning Port Server ",isUrl," ..\n")
+        isScaning = nmap.PortScanner()
+        url = isUrl.replace("https://","")
+        print (url)
+        host = socket.gethostbyname(url)
         print ("[-->] Scanning IP : ", host)
         isResultScan = isScaning.scan(host)
         try:
@@ -76,9 +78,9 @@ class InformationDisclorse ():
                 ssh = 'null'
 
             if (ftp['state'] == 'open'):
-                print ("[WARNING] FTP connection is open, Posible to brute force")
+                print (CGRE,"[WARNING] FTP connection is open, Posible to brute force", CENDYELL)
             if (ssh['state'] == 'open'):
-                print ("[WARNING] SSH connection is open, Posible to brute force")
+                print (CGRE,"[WARNING] SSH connection is open, Posible to brute force",CENDYELL)
 
             if (ssh == 'null' and ftp == 'null') : 
                 print ("[INFO] No critical port ")
@@ -99,6 +101,6 @@ class InformationDisclorse ():
                 print (CGRE,"[WARNING] Critical link found ",url,CENDYELL)
 
     def GetInformation(self):
-        # self.GetWebServer(self.isUrl)
-        # self.FindCritcalLink(self.isUrl)
+        self.GetWebServer(self.isUrl)
+        self.FindCritcalLink(self.isUrl)
         self.ScanningServer(self.isUrl)
