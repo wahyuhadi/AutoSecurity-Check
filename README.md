@@ -99,8 +99,8 @@ $ python apps.py  -u 'https://web.com' -m info
 [-->] Scanning IP :  xx.xx.xx.xx
  [WARNING] FTP connection is open, Posible to brute force, Version  Pure-FTPd 
  [WARNING]  230 Anonymous user logged in 
-drwxr-xr-x    2 0          0                   6 Dec 23  2015 .
-drwxr-xr-x    2 0          0                   6 Dec 23  2015 ..
+drwxr-xr-x    2 0          0                   22 Feb 23  2019 .
+drwxr-xr-x    2 0          0                   6 Feb 23  2019 ..
 ls command execute  226-Options: -a -l 
 226 2 matches total
 
