@@ -69,28 +69,33 @@ class InformationDisclorse ():
         else : 
             try:
                 ftp = isScan[21]
+                if (ftp['state'] == 'open'):
+                    if (ftp['name'] == 'ftp'):
+                        print (CGRE,"[WARNING] FTP connection is open, Posible to brute force, Version ", ftp['product'], CENDYELL)
+                        ftp = FTP(url)
+                        try:
+                            loginFtp = ftp.login()
+                        except:
+                            loginFtp = False
+                            pass
+
+                        if (loginFtp == '230 Anonymous user logged in'):
+                            print (CGRE,"[WARNING] ", loginFtp , CENDYELL)
+                            print ("ls command execute ", ftp.retrlines('LIST'))
+                            ftp.quit()
+
             except (ValueError, KeyError, TypeError) : 
                 ftp = 'null'
 
             try:
                 ssh = isScan[22]
+                if (ssh['state'] == 'open' and ssh != 'null'):
+                    if (ssh['name'] == 'ssh'):
+                        print (CGRE,"[WARNING] SSH connection is open, Posible to brute force ",ssh['product'],CENDYELL)
             except (ValueError, KeyError, TypeError) : 
                 ssh = 'null'
 
-            if (ftp['state'] == 'open'):
-                if (ftp['name'] == 'ftp'):
-                    print (CGRE,"[WARNING] FTP connection is open, Posible to brute force, Version ", ftp['product'], CENDYELL)
-                    ftp = FTP(url)
-                    loginFtp = ftp.login()
-                    if (loginFtp == '230 Anonymous user logged in'):
-                        print (CGRE,"[WARNING] ", loginFtp , CENDYELL)
-                        print ("ls command execute ", ftp.retrlines('LIST'))
-                        ftp.quit()
-
-            if (ssh['state'] == 'open'):
-                if (ssh['name'] == 'ssh'):
-                    print (CGRE,"[WARNING] SSH connection is open, Posible to brute force ",ssh['product'],CENDYELL)
-
+           
             if (ssh == 'null' and ftp == 'null') : 
                 print ("[INFO] No critical port ")
 
@@ -105,7 +110,11 @@ class InformationDisclorse ():
 
         for critical in isCritical:
             url = isUrl+critical
-            isStatus = (requests.get(url).status_code)
+            try:
+                isStatus = (requests.get(url, timeout=10).status_code)
+            except (TimeoutError):
+                print ("[INFO] Time Out ")
+                pass
             if (isStatus == 200):
                 print (CGRE,"[WARNING] Critical link found ",url,CENDYELL)
 

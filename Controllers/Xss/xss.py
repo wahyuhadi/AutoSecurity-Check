@@ -134,9 +134,7 @@ class HtmlCheck():
             for name, key in isDict.items() :
                 if key == value:
                     split = nameParams.split(" ")
-                    if name in split   :
-                        var = ''
-                    else :
+                    if name not in split :
                         nameParams += name+" "
         return nameParams or "Not Found"
 
