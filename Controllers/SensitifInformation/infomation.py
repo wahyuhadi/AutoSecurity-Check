@@ -11,10 +11,10 @@ import json
 import pprint
 from ftplib import FTP
 
-CYELL = '\033[93m'
+CYELL = '\033[1;93m'
 CENDYELL = '\033[0m'
-CGRE = '\033[92m'
-CYAN = '\033[36m'
+CGRE = '\033[1;92m'
+CYAN = '\033[1;36m'
 
 class InformationDisclorse ():
     def __init__ (self, isUrl):

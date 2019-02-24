@@ -5,6 +5,7 @@ date : 2019-02-22
 
 from Controllers.Xss.xss import HtmlCheck
 from Controllers.SensitifInformation.infomation import InformationDisclorse
+from Controllers.SqlInjection.sql import SimpleSqlCheck
 import  argparse
 import datetime
 import json
@@ -30,6 +31,10 @@ def isInformationGatheringHandler(isUrl):
     informationGather = InformationDisclorse(isUrl)
     informationGather.GetInformation()
 
+def isSQlInjectionHandler(isUrl):
+    sqli = SimpleSqlCheck(isUrl)
+    sqli.CheckSqlInjection()
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-u", help="is url test example : -u https://web.com/?data=aaa", required=True)
@@ -44,6 +49,8 @@ def main():
         isXssHandler(isUrl,isTags)
     elif (isTestMethod == 'info'):
         isInformationGatheringHandler(isUrl)
+    elif (isTestMethod == 'sqli'):
+        isSQlInjectionHandler(isUrl)
     else :
         print ('[+] Opps please check testing avalible')
         isListAvail()
