@@ -25,17 +25,19 @@ class SimpleSqlCheck():
         # isQuery = isQueryParsed.split('&')
         # print(isQuery)
 
-        parsed = urlparse.urlparse(self.isUrl)
-        querys = parsed.query.split("&")
-        result = []
-        for pairs in isErrorbased:
-            for query in querys :
-                new_query = "&".join([ "{}{}".format(query, pairs)])
-                print (new_query)
-                parsed = parsed._replace(query=new_query)
-                result.append(urlparse.urlunparse(parsed))
+        parsed = urlparse.urlparse(self.isUrl).query
+        print (urlparse.parse_qs(parsed))
+        # querys = parsed.query.split("&")
+        # result = []
+        # for query in querys:
+        #     for pairs in isErrorbased :
+        #         print (query)
+        #         new_query = "&".join([ "{}{}".format(query, pairs)])
+        #         print (new_query)
+        #         parsed = parsed._replace(query=new_query)
+        #         result.append(urlparse.urlunparse(parsed))
+        # print (result)
 
-        print (result)
     def CheckSqlInjection(self):
         lenght = self.isCheckNormalQuery()
         self.IsQueryErrors(lenght)
