@@ -35,8 +35,7 @@ class SimpleSqlCheck():
                         except (TypeError, KeyError):
                             pass
         
-        pprint (isJson)        # pprint (data['item'])
-
+        
     def isCheckNormalQuery(self):
         try:
             isStatus = (requests.get(self.isUrl , timeout=10))
