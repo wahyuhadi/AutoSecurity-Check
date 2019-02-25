@@ -10,7 +10,9 @@ import socket
 import json 
 import pprint
 from ftplib import FTP
+import urllib.parse as urlparse
 
+from pprint import pprint
 CYELL = '\033[1;93m'
 CENDYELL = '\033[0m'
 CGRE = '\033[1;92m'
@@ -48,17 +50,18 @@ class InformationDisclorse ():
             else : 
                 print (CYELL, "[!] Oops response is bad in url ", str(isUrl), "\n",CENDYELL)
         
-        except (TimeoutError) as e:
+        except (TimeoutError, ConnectionError, ConnectionAbortedError, ConnectionResetError) as e:
             print ("[+] Oops Request timeout ",e)
             sys.exit(0)
 
     def ScanningServer(self, isUrl):
         print ("\n[INFO] Scanning Port Server ",isUrl," ..\n")
         isScaning = nmap.PortScanner()
-        url = isUrl.replace("https://","")
+        url = urlparse.urlparse(isUrl).netloc
         host = socket.gethostbyname(url)
         print ("[-->] Scanning IP : ", host)
-        isResultScan = isScaning.scan(host)
+        isResultScan = isScaning.scan(host, arguments='-A -T4 -vvvv')
+
         try:
                 isScan = isResultScan['scan'][host]['tcp'] 
         except (ValueError, KeyError, TypeError) : 
@@ -95,9 +98,17 @@ class InformationDisclorse ():
             except (ValueError, KeyError, TypeError) : 
                 ssh = 'null'
 
+            try:
+                postgres = isScan[5432]
+                if (postgres['state'] == 'open' and postgres != 'null'):
+                    if (postgres['name'] == 'postgresql'):
+                        print (CGRE,"[WARNING] Postgresql connection is open, Posible to brute force ",postgres['product'],CENDYELL)
+            except (ValueError, KeyError, TypeError) : 
+                postgres = 'null'
+
            
-            if (ssh == 'null' and ftp == 'null') : 
-                print ("[INFO] No critical port ")
+            if (ssh == 'null' and ftp == 'null' and postgres == 'null') : 
+                print ("[INFO] No critical port found ")
 
     def FindCritcalLink(self, isUrl):
         isCritical = []
