@@ -1,12 +1,41 @@
 import requests 
 import urllib.parse as urlparse
+import json,sys
+from pprint import pprint
 
 isErrorbased = ['"', "'", '--']
+isJson = []
 
 class SimpleSqlCheck():
 
-    def __init__(self, isUrl):
+    def __init__(self, isUrl, isLocation):
         self.isUrl = isUrl
+        self.isLocation = isLocation
+
+    def ParsingJson(self):
+        if (self.isLocation == False):
+            print ("[INFO] Please add specifict file json location")
+            sys.exit(0)
+        else :
+            print ("[INFO] Parsing Json where method GET ..")
+            with open(self.isLocation) as f:
+                data = json.load(f)
+                isItems = data['item']
+                for items in isItems:
+                    try:
+                        item = items['item']
+                    except (TypeError, KeyError):
+                        pass
+
+                    for i in item:
+                        try:
+                            isMethod = i['request']['method']
+                            if (isMethod == 'GET'):
+                                isJson.append(i)
+                        except (TypeError, KeyError):
+                            pass
+        
+        pprint (isJson)        # pprint (data['item'])
 
     def isCheckNormalQuery(self):
         try:
@@ -39,5 +68,8 @@ class SimpleSqlCheck():
         # print (result)
 
     def CheckSqlInjection(self):
-        lenght = self.isCheckNormalQuery()
-        self.IsQueryErrors(lenght)
+        if (self.isLocation != False):
+            self.ParsingJson()
+        else:
+            lenght = self.isCheckNormalQuery()
+            self.IsQueryErrors(lenght)

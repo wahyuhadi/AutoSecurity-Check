@@ -31,8 +31,8 @@ def isInformationGatheringHandler(isUrl):
     informationGather = InformationDisclorse(isUrl)
     informationGather.GetInformation()
 
-def isSQlInjectionHandler(isUrl):
-    sqli = SimpleSqlCheck(isUrl)
+def isSQlInjectionHandler(isUrl, isJson):
+    sqli = SimpleSqlCheck(isUrl, isJson)
     sqli.CheckSqlInjection()
 
 def main():
@@ -40,17 +40,20 @@ def main():
     parser.add_argument("-u", help="is url test example : -u https://web.com/?data=aaa", required=True)
     parser.add_argument("-m", help="method for testing, see with -l, example: -m xss ", required=True)
     parser.add_argument("-t", help="is tags will check  example : -t value or div or a ")
+    parser.add_argument("-j", help="json export for test API location : -j /home/user/api.json")
 
     argv = (parser.parse_args())
     isUrl = argv.u
     isTestMethod = argv.m
     isTags = argv.t or 'all'
+    isJson = argv.j or False
+
     if (isTestMethod == 'xss'):
         isXssHandler(isUrl,isTags)
     elif (isTestMethod == 'info'):
         isInformationGatheringHandler(isUrl)
     elif (isTestMethod == 'sqli'):
-        isSQlInjectionHandler(isUrl)
+        isSQlInjectionHandler(isUrl,isJson)
     else :
         print ('[+] Opps please check testing avalible')
         isListAvail()
