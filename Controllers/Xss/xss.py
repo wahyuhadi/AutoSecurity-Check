@@ -16,6 +16,7 @@ CYELL = '\033[1;93m'
 CENDYELL = '\033[0m'
 CGRE = '\033[1;92m'
 CYAN = '\033[1;36m'
+RED = '\033[1;31m'
 
 class HtmlCheck():
 
@@ -83,9 +84,10 @@ class HtmlCheck():
                     print (CYELL, "[!] Oops response is bad in url ", str(isUrl[i]), "\n",CENDYELL)
                     requestError = requestError + 1
 
-            except (TimeoutError) as e:
-                print ("[+] Oops Request timeout")
+            except Exception as e:
+                print (RED,"[WARNING] Oops Request timeout ",e, CENDYELL)
                 sys.exit(0)
+
 
 
         print ("[+] Checking Xss Payload ... ")
@@ -105,8 +107,8 @@ class HtmlCheck():
                     print (CYELL, "[!] Oops response is bad in url", str(isXssUrl[xss]) , "\n",CENDYELL)
                     requestError = requestError + 1
 
-            except (TimeoutError) as e:
-                print ("[+] Oops Request timeout")
+            except Exception as e:
+                print (RED,"[WARNING] Oops Request timeout ",e, CENDYELL)
                 sys.exit(0)
 
 
