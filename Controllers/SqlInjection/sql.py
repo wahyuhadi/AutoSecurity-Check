@@ -6,6 +6,14 @@ from pprint import pprint
 isErrorbased = ['"', "'", '--']
 isJson = []
 
+
+CYELL = '\033[1;93m'
+CENDYELL = '\033[0m'
+CGRE = '\033[1;92m'
+CYAN = '\033[1;36m'
+RED =  '\033[1;31m'
+
+
 class SimpleSqlCheck():
 
     def __init__(self, isUrl, isLocation):
@@ -43,9 +51,9 @@ class SimpleSqlCheck():
                 print ("[INFO] status OK")
                 return isStatus.headers['Content-Length']
 
-        except (TimeoutError, ConnectionError):
-            print ("[INFO] Time Out ")
-            pass
+        except Exception as e:
+                print (RED,"[WARNING] Oops Request timeout ",e, CENDYELL)
+                sys.exit(0)
 
     def IsQueryErrors(self, isContentLength):
         print ("[INFO] Checking Error Based ..")

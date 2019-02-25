@@ -17,6 +17,8 @@ CYELL = '\033[1;93m'
 CENDYELL = '\033[0m'
 CGRE = '\033[1;92m'
 CYAN = '\033[1;36m'
+RED =  '\033[1;31m'
+
 
 class InformationDisclorse ():
     def __init__ (self, isUrl):
@@ -50,8 +52,9 @@ class InformationDisclorse ():
             else : 
                 print (CYELL, "[!] Oops response is bad in url ", str(isUrl), "\n",CENDYELL)
         
-        except (TimeoutError, ConnectionError, ConnectionAbortedError, ConnectionResetError) as e:
-            print ("[+] Oops Request timeout ",e)
+        except Exception as e:
+        # except (TimeoutError, ConnectionError, ConnectionAbortedError, ConnectionResetError) as e:
+            print (RED,"[WARNING] Oops Request timeout ",e, CENDYELL)
             sys.exit(0)
 
     def ScanningServer(self, isUrl):
@@ -123,8 +126,9 @@ class InformationDisclorse ():
             url = isUrl+critical
             try:
                 isStatus = (requests.get(url, timeout=10).status_code)
-            except (TimeoutError):
-                print ("[INFO] Time Out ")
+            except Exception as e:
+            # except (TimeoutError):
+                print (RED,"[WARNING] Oops Request timeout ",e, CENDYELL)
                 pass
             if (isStatus == 200):
                 print (CGRE,"[WARNING] Critical link found ",url,CENDYELL)
